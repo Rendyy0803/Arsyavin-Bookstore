@@ -1,8 +1,5 @@
 import React, { useState, useEffect } from 'react';
-
-// Karena akan di-bundle, tidak perlu import global window.tailwind lagi
-// Tailwind CSS classes akan dikompilasi langsung ke dalam file CSS
-// oleh build tool seperti Vite.
+import { createRoot } from 'react-dom/client';
 
 const App = () => {
   const [activeTab, setActiveTab] = useState('search');
