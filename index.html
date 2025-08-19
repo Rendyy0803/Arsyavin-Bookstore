@@ -8,12 +8,18 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+    }
+  </style>
 </head>
 <body class="bg-gray-100 antialiased">
   <div id="root"></div>
   
   <script>
     // Ganti ini dengan Deployment ID dari Google Apps Script Anda
+    // Pastikan tidak ada spasi atau karakter tambahan di sini
     const SCRIPT_ID = 'AKfycbzu0ASKbzOK3GgWdW-yM2HZM2UryuqlyiErRGPJ_B3O7c3SJqBGWhyimuiHBi_zSFg-ag';
   </script>
   
@@ -21,6 +27,6 @@
   <script src="https://script.google.com/macros/s/" + SCRIPT_ID + "/usercode"></script>
   
   <!-- Memuat aplikasi React -->
-  <script type="module" src="/App.jsx"></script>
+  <script type="module" src="./App.jsx"></script>
 </body>
 </html>
