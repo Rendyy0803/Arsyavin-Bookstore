@@ -138,6 +138,17 @@ h1, h2, h3, h4, h5, h6 {
 
 /* Aturan untuk mencetak */
 @media print {
+    /* BARU: Aturan @page untuk mengontrol halaman cetak */
+    @page {
+        size: A4; /* Anda bisa sesuaikan ukuran kertas */
+        margin: 0; /* Ini adalah kunci untuk menghapus header & footer browser */
+    }
+
+    body {
+        margin: 0;
+        padding: 0;
+    }
+    
     body * {
         visibility: hidden;
     }
@@ -149,13 +160,17 @@ h1, h2, h3, h4, h5, h6 {
         left: 0;
         top: 0;
         width: 100%;
-        margin: 0;
-        padding: 0;
+        height: 100%;
     }
     #invoice-to-print {
         box-shadow: none;
         border: none;
+        margin: 0;
+        padding: 2cm; /* Beri padding agar konten tidak menempel di tepi kertas */
+        width: 100%;
         max-width: 100%;
+        height: 100%;
+        box-sizing: border-box; /* Pastikan padding termasuk dalam width/height */
     }
     .no-print {
         display: none;
