@@ -1,0 +1,163 @@
+/* Import Font */
+@import url('https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&family=Lato:wght@400;700&display=swap');
+
+/* Variabel CSS untuk tema */
+:root {
+    --font-serif: 'Merriweather', serif;
+    --font-sans: 'Lato', sans-serif;
+    --primary-color: #4338ca; /* Indigo */
+    --secondary-color: #4a5568; /* Gray */
+    --background-color: #f7fafc; /* Light Gray */
+    --paper-bg: #fff;
+    --paper-texture-url: url('https://www.transparenttextures.com/patterns/paper-fibers.png');
+}
+
+body {
+    font-family: var(--font-sans);
+    background-color: var(--background-color);
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-serif);
+}
+
+/* Styling untuk Tab Navigasi */
+.tab-button {
+    padding: 0.75rem 1rem;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--secondary-color);
+    border-bottom: 2px solid transparent;
+    transition: all 0.2s ease-in-out;
+}
+
+.tab-button:hover {
+    color: var(--primary-color);
+}
+
+.tab-button.active {
+    color: var(--primary-color);
+    border-bottom-color: var(--primary-color);
+}
+
+/* Styling untuk Invoice Cetak */
+#invoice-to-print {
+    font-family: var(--font-sans);
+    color: #333;
+    background-color: var(--paper-bg);
+    background-image: var(--paper-texture-url);
+    padding: 2.5rem;
+    margin: 2rem auto;
+    max-width: 800px;
+    border: 1px solid #ddd;
+    box-shadow: 0 0 15px rgba(0,0,0,0.05);
+}
+
+#invoice-to-print .invoice-header {
+    text-align: center;
+    margin-bottom: 2rem;
+    border-bottom: 2px solid #eee;
+    padding-bottom: 1rem;
+}
+
+#invoice-to-print .invoice-header h1 {
+    font-family: var(--font-serif);
+    font-size: 2.5rem;
+    color: #2c3e50;
+    margin: 0;
+}
+
+#invoice-to-print .invoice-header p {
+    font-size: 0.9rem;
+    color: #7f8c8d;
+}
+
+#invoice-to-print .invoice-details {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 2rem;
+}
+
+#invoice-to-print .invoice-details-left,
+#invoice-to-print .invoice-details-right {
+    font-size: 0.9rem;
+}
+
+#invoice-to-print .invoice-details-right {
+    text-align: right;
+}
+
+#invoice-to-print table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 2rem;
+}
+
+#invoice-to-print th, #invoice-to-print td {
+    padding: 0.75rem;
+    text-align: left;
+    border-bottom: 1px solid #eee;
+}
+
+#invoice-to-print thead th {
+    background-color: #f9f9f9;
+    font-weight: bold;
+    color: #555;
+    text-transform: uppercase;
+    font-size: 0.8rem;
+}
+
+#invoice-to-print tbody tr:last-child td {
+    border-bottom: none;
+}
+
+#invoice-to-print .invoice-total {
+    text-align: right;
+    margin-top: 1rem;
+}
+
+#invoice-to-print .invoice-total p {
+    margin: 0.5rem 0;
+    font-size: 1rem;
+}
+
+#invoice-to-print .invoice-total .total-amount {
+    font-size: 1.25rem;
+    font-weight: bold;
+    color: #2c3e50;
+}
+
+#invoice-to-print .invoice-footer {
+    text-align: center;
+    margin-top: 3rem;
+    padding-top: 1rem;
+    border-top: 1px solid #eee;
+    font-size: 0.85rem;
+    color: #7f8c8d;
+}
+
+/* Aturan untuk mencetak */
+@media print {
+    body * {
+        visibility: hidden;
+    }
+    #invoice-display-area, #invoice-display-area * {
+        visibility: visible;
+    }
+    #invoice-display-area {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        margin: 0;
+        padding: 0;
+    }
+    #invoice-to-print {
+        box-shadow: none;
+        border: none;
+        max-width: 100%;
+    }
+    .no-print {
+        display: none;
+    }
+}
