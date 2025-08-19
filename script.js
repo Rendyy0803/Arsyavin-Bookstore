@@ -18,6 +18,14 @@ const totalAmountSpan = document.getElementById('totalAmount');
 document.addEventListener('DOMContentLoaded', () => {
     loadProducts();
     showTab('createInvoiceTab'); // Tampilkan tab pertama secara default
+
+    // BARU: Menambahkan event listener untuk semua tombol tab
+    document.querySelectorAll('.tab-button').forEach(button => {
+        button.addEventListener('click', () => {
+            const tabId = button.getAttribute('data-tab');
+            showTab(tabId);
+        });
+    });
 });
 
 // Fungsi untuk menampilkan notifikasi
