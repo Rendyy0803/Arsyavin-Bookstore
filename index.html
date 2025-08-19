@@ -1,367 +1,128 @@
 <!DOCTYPE html>
-<html>
-  <head>
+<html lang="id">
+<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistem Invoice Arsyavin Bookstore</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
+    <title>Invoice App - Arysvain Bookstore</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-      body {
-        font-family: 'Inter', sans-serif;
-        background-color: #f8f1e9; /* Warna krem hangat */
-        padding: 2rem;
-      }
-      .container {
-        max-width: 800px;
-        margin: auto;
-        padding: 2rem;
-        background-color: #ffffff;
-        border-radius: 1rem;
-        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
-      }
-      .loading {
-        display: none;
-        margin-top: 1rem;
-        color: #78716c; /* Warna abu-abu kecoklatan */
-        text-align: center;
-      }
-      .result {
-        display: none;
-        margin-top: 1.5rem;
-        padding: 1rem;
-        background-color: #d8f5e5; /* Hijau muda */
-        border-radius: 0.5rem;
-        border: 1px solid #10b981;
-      }
-      .error {
-        display: none;
-        margin-top: 1.5rem;
-        padding: 1rem;
-        background-color: #fef2f2; /* Merah muda */
-        border-radius: 0.5rem;
-        border: 1px solid #ef4444;
-      }
-      .header-font {
-        font-family: 'Playfair Display', serif;
-      }
-    </style>
-  </head>
-  <body>
-    <div class="container">
-      <h1 class="header-font text-3xl font-bold text-[#4a2a16] mb-6 text-center">Arsyavin Bookstore</h1>
-      
-      <!-- Navigasi Tab -->
-      <div class="border-b border-gray-200">
-        <nav class="-mb-px flex space-x-8" aria-label="Tabs">
-          <a href="#" id="tab-create" class="tab-link border-b-2 border-transparent py-4 px-1 text-center text-sm font-medium text-gray-500 hover:text-gray-700 hover:border-gray-300">Buat Invoice</a>
-          <a href="#" id="tab-input" class="tab-link border-b-2 border-transparent py-4 px-1 text-center text-sm font-medium text-gray-500 hover:text-gray-700 hover:border-gray-300">Input Data Penjualan</a>
-          <a href="#" id="tab-search" class="tab-link border-b-2 border-amber-600 py-4 px-1 text-center text-sm font-medium text-amber-700" aria-current="page">Cari Invoice</a>
-        </nav>
-      </div>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&family=Lato:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body class="bg-gray-100 font-lato text-gray-800">
 
-      <!-- Konten Tab -->
-      <div id="content-create" class="tab-content hidden pt-6">
-        <p class="text-gray-600 mb-6 text-center">Pilih nama pelanggan dan klik 'Buat Invoice' untuk menghasilkan file PDF.</p>
-        <div class="space-y-4">
-          <div>
-            <label for="customerSelect" class="block text-sm font-medium text-gray-700">Pilih Pelanggan:</label>
-            <select id="customerSelect" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-amber-500 focus:border-amber-500 sm:text-sm rounded-md">
-              <!-- Pilihan pelanggan akan diisi oleh JavaScript -->
-            </select>
-          </div>
-          <button id="createInvoiceBtn" class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-amber-600 hover:bg-amber-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-amber-500">
-            Buat Invoice
-          </button>
+    <div class="container mx-auto p-4 md:p-8">
+        <header class="text-center mb-8">
+            <h1 class="text-4xl font-merriweather font-bold text-gray-700">Arysvain Bookstore</h1>
+            <p class="text-gray-500">Aplikasi Manajemen Invoice</p>
+        </header>
+
+        <!-- Navigasi Tab -->
+        <div class="mb-6 border-b border-gray-300">
+            <nav class="flex space-x-4" aria-label="Tabs">
+                <button onclick="showTab('createInvoiceTab')" class="tab-button active" data-tab="createInvoiceTab">Buat Invoice</button>
+                <button onclick="showTab('addProductTab')" class="tab-button" data-tab="addProductTab">Tambah Produk</button>
+                <button onclick="showTab('findInvoiceTab')" class="tab-button" data-tab="findInvoiceTab">Cari & Cetak Invoice</button>
+            </nav>
         </div>
-      </div>
-      
-      <div id="content-input" class="tab-content hidden pt-6">
-        <p class="text-gray-600 mb-6 text-center">Masukkan data penjualan baru di bawah ini.</p>
-        <form id="inputForm" class="space-y-4">
-          <div>
-            <label for="inputCustomerName" class="block text-sm font-medium text-gray-700">Nama Pelanggan</label>
-            <input type="text" id="inputCustomerName" name="customerName" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-amber-500 focus:ring-amber-500 sm:text-sm p-2" />
-          </div>
-          <div>
-            <label for="inputItemName" class="block text-sm font-medium text-gray-700">Nama Barang</label>
-            <input type="text" id="inputItemName" name="itemName" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-amber-500 focus:ring-amber-500 sm:text-sm p-2" />
-          </div>
-          <div>
-            <label for="inputQuantity" class="block text-sm font-medium text-gray-700">Jumlah</label>
-            <input type="number" id="inputQuantity" name="quantity" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-amber-500 focus:ring-amber-500 sm:text-sm p-2" />
-          </div>
-          <button type="submit" class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
-            Simpan Data
-          </button>
-        </form>
-      </div>
 
-      <div id="content-search" class="tab-content pt-6">
-        <p class="text-gray-600 mb-6 text-center">Cari invoice berdasarkan nama pelanggan atau nomor invoice.</p>
-        <div class="space-y-4">
-          <div>
-            <label for="searchInput" class="block text-sm font-medium text-gray-700">Cari Invoice:</label>
-            <input
-              type="text"
-              id="searchInput"
-              placeholder="Nama Pelanggan atau Nomor Invoice..."
-              class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-amber-500 focus:ring-amber-500 sm:text-sm p-2"
-            />
-          </div>
-          <div id="searchResults" class="space-y-2">
-            <!-- Hasil pencarian akan ditampilkan di sini -->
-          </div>
+        <!-- Konten Tab -->
+        <main>
+            <!-- Tab: Buat Invoice -->
+            <div id="createInvoiceTab" class="tab-content">
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <h2 class="text-2xl font-bold mb-4 font-merriweather">Buat Invoice Baru</h2>
+                    <form id="invoiceForm">
+                        <div class="mb-4">
+                            <label for="customerName" class="block text-sm font-medium text-gray-700 mb-1">Nama Pelanggan</label>
+                            <input type="text" id="customerName" class="w-full p-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500" required>
+                        </div>
+
+                        <div class="border-t border-b border-gray-200 py-4 my-4">
+                            <h3 class="text-lg font-bold mb-2">Item Penjualan</h3>
+                            <div class="grid grid-cols-1 md:grid-cols-5 gap-4 items-end">
+                                <div class="md:col-span-3">
+                                    <label for="productSelect" class="block text-sm font-medium text-gray-700 mb-1">Pilih Produk</label>
+                                    <select id="productSelect" class="w-full p-2 border border-gray-300 rounded-md"></select>
+                                </div>
+                                <div>
+                                    <label for="quantity" class="block text-sm font-medium text-gray-700 mb-1">Jumlah</label>
+                                    <input type="number" id="quantity" value="1" min="1" class="w-full p-2 border border-gray-300 rounded-md">
+                                </div>
+                                <button type="button" id="addItemBtn" class="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 transition duration-200">Tambah Item</button>
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <h3 class="text-lg font-bold mb-2">Daftar Item</h3>
+                            <table class="min-w-full bg-white">
+                                <thead class="bg-gray-50">
+                                    <tr>
+                                        <th class="py-2 px-4 border-b">Produk</th>
+                                        <th class="py-2 px-4 border-b">Jumlah</th>
+                                        <th class="py-2 px-4 border-b">Harga</th>
+                                        <th class="py-2 px-4 border-b">Subtotal</th>
+                                        <th class="py-2 px-4 border-b">Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="invoiceItemsTable">
+                                    <!-- Item akan ditambahkan di sini oleh JavaScript -->
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="text-right mt-4">
+                            <p class="text-xl font-bold">Total: <span id="totalAmount">Rp 0</span></p>
+                        </div>
+                        <div class="mt-6 flex justify-end">
+                            <button type="submit" class="bg-green-600 text-white px-6 py-2 rounded-md hover:bg-green-700 transition duration-200">Simpan Invoice</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Tab: Tambah Produk -->
+            <div id="addProductTab" class="tab-content hidden">
+                <div class="bg-white p-6 rounded-lg shadow-md max-w-lg mx-auto">
+                    <h2 class="text-2xl font-bold mb-4 font-merriweather">Tambah Produk Baru</h2>
+                    <form id="addProductForm">
+                        <div class="mb-4">
+                            <label for="productName" class="block text-sm font-medium text-gray-700 mb-1">Nama Produk</label>
+                            <input type="text" id="productName" class="w-full p-2 border border-gray-300 rounded-md" required>
+                        </div>
+                        <div class="mb-4">
+                            <label for="price" class="block text-sm font-medium text-gray-700 mb-1">Harga</label>
+                            <input type="number" id="price" min="0" class="w-full p-2 border border-gray-300 rounded-md" required>
+                        </div>
+                        <div class="mt-6">
+                            <button type="submit" class="w-full bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 transition duration-200">Simpan Produk</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Tab: Cari & Cetak Invoice -->
+            <div id="findInvoiceTab" class="tab-content hidden">
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <h2 class="text-2xl font-bold mb-4 font-merriweather">Cari Invoice</h2>
+                    <form id="findInvoiceForm" class="flex space-x-2">
+                        <input type="text" id="searchQuery" placeholder="Masukkan No. Invoice atau Nama Pelanggan" class="flex-grow p-2 border border-gray-300 rounded-md">
+                        <button type="submit" class="bg-indigo-600 text-white px-6 py-2 rounded-md hover:bg-indigo-700">Cari</button>
+                    </form>
+                    <div id="searchResults" class="mt-6"></div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Area untuk menampilkan invoice yang akan dicetak -->
+        <div id="invoice-display-area" class="hidden"></div>
+        
+        <!-- Notifikasi/Alert -->
+        <div id="notification" class="fixed top-5 right-5 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg opacity-0 transition-opacity duration-300">
+            <p id="notification-message"></p>
         </div>
-      </div>
 
-      <!-- Pesan Status -->
-      <div id="loadingMessage" class="loading">
-        <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-gray-500 inline-block" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-        </svg>
-        Memproses, mohon tunggu...
-      </div>
-      <div id="successMessage" class="result">
-        <span id="successText"></span>
-      </div>
-      <div id="errorMessage" class="error">
-        Terjadi kesalahan: <span id="errorDetails"></span>
-      </div>
     </div>
 
-    <!-- Script JavaScript untuk logika aplikasi -->
-    <script>
-      // Ganti ini dengan Deployment ID dari Google Apps Script Anda
-      const SCRIPT_ID = 'AKfycbzu0ASKbzOK3GgWdW-yM2HZM2UryuqlyiErRGPJ_B3O7c3SJqBGWhyimuiHBi_zSFg-ag';
-      // URL untuk Google Apps Script Web App
-      const SCRIPT_URL = `https://script.google.com/macros/s/${SCRIPT_ID}/exec`;
-
-      window.addEventListener('load', () => {
-        loadScript();
-        switchTab('search');
-        loadingMessage.style.display = 'block';
-      });
-
-      function loadScript() {
-        if (typeof google === 'undefined' || typeof google.script === 'undefined' || typeof google.script.run === 'undefined') {
-          const script = document.createElement('script');
-          script.src = `https://script.google.com/macros/s/${SCRIPT_ID}/usercode`;
-          script.onload = () => {
-            console.log('Google Apps Script API loaded successfully.');
-            initializeUI();
-          };
-          script.onerror = () => {
-            console.error('Failed to load Google Apps Script API.');
-            showStatus('error', 'Gagal memuat API. Pastikan Deployment ID benar dan memiliki akses `Anyone`.');
-            loadingMessage.style.display = 'none';
-          };
-          document.head.appendChild(script);
-        } else {
-          console.log('Google Apps Script API already loaded.');
-          initializeUI();
-        }
-      }
-
-      function initializeUI() {
-        google.script.run
-          .withSuccessHandler(populateCustomers)
-          .withFailureHandler(handleError)
-          .getUniqueCustomers();
-      }
-
-      // Dapatkan referensi elemen-elemen DOM
-      const tabs = {
-        create: {
-          link: document.getElementById('tab-create'),
-          content: document.getElementById('content-create')
-        },
-        input: {
-          link: document.getElementById('tab-input'),
-          content: document.getElementById('content-input')
-        },
-        search: {
-          link: document.getElementById('tab-search'),
-          content: document.getElementById('content-search')
-        }
-      };
-      
-      const customerSelect = document.getElementById('customerSelect');
-      const createInvoiceBtn = document.getElementById('createInvoiceBtn');
-      const inputForm = document.getElementById('inputForm');
-      const searchInput = document.getElementById('searchInput');
-      const searchResults = document.getElementById('searchResults');
-      
-      const loadingMessage = document.getElementById('loadingMessage');
-      const successMessage = document.getElementById('successMessage');
-      const successText = document.getElementById('successText');
-      const errorMessage = document.getElementById('errorMessage');
-      const errorDetails = document.getElementById('errorDetails');
-
-      let searchTimeout;
-      
-      // Fungsi untuk mengelola pesan status
-      function showStatus(type, text) {
-        hideMessages();
-        if (type === 'error') {
-          errorDetails.textContent = text;
-          errorMessage.style.display = 'block';
-        } else {
-          successText.innerHTML = text;
-          successMessage.style.display = 'block';
-        }
-      }
-      
-      // Fungsi untuk menyembunyikan semua pesan
-      function hideMessages() {
-        successMessage.style.display = 'none';
-        errorMessage.style.display = 'none';
-      }
-
-      // Fungsi untuk mengisi dropdown pelanggan
-      function populateCustomers(customers) {
-        loadingMessage.style.display = 'none';
-        customerSelect.innerHTML = '';
-        if (customers.length === 0) {
-          customerSelect.innerHTML = '<option>Tidak ada data pelanggan</option>';
-          createInvoiceBtn.disabled = true;
-          return;
-        }
-        customers.forEach(customer => {
-          const option = document.createElement('option');
-          option.value = customer;
-          option.textContent = customer;
-          customerSelect.appendChild(option);
-        });
-        createInvoiceBtn.disabled = false;
-      }
-
-      // Fungsi untuk mengelola tab
-      function switchTab(tabId) {
-        for (const id in tabs) {
-          const tab = tabs[id];
-          if (id === tabId) {
-            tab.link.classList.add('border-amber-600', 'text-amber-700');
-            tab.link.classList.remove('border-transparent', 'text-gray-500');
-            tab.content.classList.remove('hidden');
-          } else {
-            tab.link.classList.remove('border-amber-600', 'text-amber-700');
-            tab.link.classList.add('border-transparent', 'text-gray-500');
-            tab.content.classList.add('hidden');
-          }
-        }
-        hideMessages();
-      }
-
-      tabs.create.link.addEventListener('click', (e) => { e.preventDefault(); switchTab('create'); });
-      tabs.input.link.addEventListener('click', (e) => { e.preventDefault(); switchTab('input'); });
-      tabs.search.link.addEventListener('click', (e) => { e.preventDefault(); switchTab('search'); });
-
-      // Tambahkan event listener untuk tombol 'Buat Invoice'
-      createInvoiceBtn.addEventListener('click', () => {
-        const selectedCustomer = customerSelect.value;
-        if (!selectedCustomer) {
-          showStatus('error', 'Pilih pelanggan terlebih dahulu.');
-          return;
-        }
-        
-        hideMessages();
-        loadingMessage.style.display = 'block';
-        createInvoiceBtn.disabled = true;
-
-        google.script.run
-          .withSuccessHandler(handleSuccess)
-          .withFailureHandler(handleError)
-          .createInvoicePDF(selectedCustomer);
-      });
-      
-      // Tambahkan event listener untuk formulir input data
-      inputForm.addEventListener('submit', (e) => {
-        e.preventDefault();
-        const customerName = document.getElementById('inputCustomerName').value;
-        const itemName = document.getElementById('inputItemName').value;
-        const quantity = document.getElementById('inputQuantity').value;
-        
-        if (!customerName || !itemName || !quantity) {
-          showStatus('error', 'Semua field harus diisi.');
-          return;
-        }
-
-        hideMessages();
-        loadingMessage.style.display = 'block';
-
-        google.script.run
-          .withSuccessHandler((response) => {
-            showStatus('success', 'Data berhasil disimpan! Klik tab "Buat Invoice" untuk membuat invoice.');
-            inputForm.reset();
-            loadingMessage.style.display = 'none';
-          })
-          .withFailureHandler(handleError)
-          .addSalesData(customerName, itemName, parseInt(quantity));
-      });
-
-      // Tambahkan event listener untuk fitur pencarian
-      searchInput.addEventListener('input', () => {
-        clearTimeout(searchTimeout);
-        searchTimeout = setTimeout(() => {
-          const query = searchInput.value.trim();
-          if (query.length > 2) {
-            hideMessages();
-            loadingMessage.style.display = 'block';
-            google.script.run
-              .withSuccessHandler(displaySearchResults)
-              .withFailureHandler(handleError)
-              .searchInvoices(query);
-          } else {
-            searchResults.innerHTML = '';
-          }
-        }, 500); // Tunda pencarian selama 500ms
-      });
-      
-      // Fungsi untuk menampilkan hasil pencarian
-      function displaySearchResults(results) {
-        loadingMessage.style.display = 'none';
-        searchResults.innerHTML = '';
-        if (results.length === 0) {
-          searchResults.innerHTML = '<p class="text-gray-500">Tidak ada invoice yang cocok ditemukan.</p>';
-          return;
-        }
-        
-        results.forEach(item => {
-          const resultElement = document.createElement('div');
-          resultElement.className = 'p-4 border rounded-md shadow-sm bg-gray-50';
-          resultElement.innerHTML = `
-            <p class="font-bold text-gray-800">No. Invoice: ${item.invoiceNumber}</p>
-            <p class="text-sm text-gray-600">Pelanggan: ${item.customerName}</p>
-            <p class="text-sm text-gray-600">Tanggal: ${new Date(item.date).toLocaleDateString('id-ID', { day: '2-digit', month: 'long', year: 'numeric' })}</p>
-            <a href="${item.link}" target="_blank" class="mt-2 inline-block text-sm font-medium text-amber-600 hover:underline">
-              Lihat PDF
-            </a>
-          `;
-          searchResults.appendChild(resultElement);
-        });
-      }
-
-      // Fungsi untuk menangani hasil sukses dari skrip
-      function handleSuccess(url) {
-        loadingMessage.style.display = 'none';
-        createInvoiceBtn.disabled = false;
-        if (url) {
-          showStatus('success', `Invoice berhasil dibuat! <a href="${url}" target="_blank" class="font-bold underline text-amber-700">Klik di sini untuk melihat PDF</a>.`);
-        } else {
-          showStatus('error', 'Invoice berhasil dibuat, tetapi link tidak tersedia.');
-        }
-      }
-
-      // Fungsi untuk menangani hasil gagal dari skrip
-      function handleError(error) {
-        loadingMessage.style.display = 'none';
-        createInvoiceBtn.disabled = false;
-        showStatus('error', error.message || 'Terjadi kesalahan yang tidak diketahui.');
-      }
-    </script>
-  </body>
+    <script src="script.js"></script>
+</body>
 </html>
