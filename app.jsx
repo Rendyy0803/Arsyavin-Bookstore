@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { createRoot } from 'react-dom/client';
 
-// Asumsi Tailwind CSS tersedia di lingkungan React
-const tailwind = window.tailwind;
+// Karena akan di-bundle, tidak perlu import global window.tailwind lagi
+// Tailwind CSS classes akan dikompilasi langsung ke dalam file CSS
+// oleh build tool seperti Vite.
 
 const App = () => {
   const [activeTab, setActiveTab] = useState('search');
