@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <base target="_top">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sistem Invoice Arsyavin Bookstore</title>
@@ -138,9 +137,42 @@
     <script>
       // Ganti ini dengan Deployment ID dari Google Apps Script Anda
       const SCRIPT_ID = 'AKfycbzu0ASKbzOK3GgWdW-yM2HZM2UryuqlyiErRGPJ_B3O7c3SJqBGWhyimuiHBi_zSFg-ag';
-    </script>
-    <script src="https://script.google.com/macros/s/${SCRIPT_ID}/usercode"></script>
-    <script>
+      // URL untuk Google Apps Script Web App
+      const SCRIPT_URL = `https://script.google.com/macros/s/${SCRIPT_ID}/exec`;
+
+      window.addEventListener('load', () => {
+        loadScript();
+        switchTab('search');
+        loadingMessage.style.display = 'block';
+      });
+
+      function loadScript() {
+        if (typeof google === 'undefined' || typeof google.script === 'undefined' || typeof google.script.run === 'undefined') {
+          const script = document.createElement('script');
+          script.src = `https://script.google.com/macros/s/${SCRIPT_ID}/usercode`;
+          script.onload = () => {
+            console.log('Google Apps Script API loaded successfully.');
+            initializeUI();
+          };
+          script.onerror = () => {
+            console.error('Failed to load Google Apps Script API.');
+            showStatus('error', 'Gagal memuat API. Pastikan Deployment ID benar dan memiliki akses `Anyone`.');
+            loadingMessage.style.display = 'none';
+          };
+          document.head.appendChild(script);
+        } else {
+          console.log('Google Apps Script API already loaded.');
+          initializeUI();
+        }
+      }
+
+      function initializeUI() {
+        google.script.run
+          .withSuccessHandler(populateCustomers)
+          .withFailureHandler(handleError)
+          .getUniqueCustomers();
+      }
+
       // Dapatkan referensi elemen-elemen DOM
       const tabs = {
         create: {
@@ -188,16 +220,6 @@
         successMessage.style.display = 'none';
         errorMessage.style.display = 'none';
       }
-
-      // Memuat daftar pelanggan
-      window.addEventListener('load', () => {
-        switchTab('search');
-        loadingMessage.style.display = 'block';
-        google.script.run
-          .withSuccessHandler(populateCustomers)
-          .withFailureHandler(handleError)
-          .getUniqueCustomers();
-      });
 
       // Fungsi untuk mengisi dropdown pelanggan
       function populateCustomers(customers) {
