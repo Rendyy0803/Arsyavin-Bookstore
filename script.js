@@ -19,7 +19,6 @@ document.addEventListener('DOMContentLoaded', () => {
     loadProducts();
     showTab('createInvoiceTab'); // Tampilkan tab pertama secara default
 
-    // BARU: Menambahkan event listener untuk semua tombol tab
     document.querySelectorAll('.tab-button').forEach(button => {
         button.addEventListener('click', () => {
             const tabId = button.getAttribute('data-tab');
@@ -94,7 +93,6 @@ document.getElementById('addItemBtn').addEventListener('click', () => {
 
     const product = products.find(p => p.productId === productId);
     
-    // Cek jika produk sudah ada di daftar
     const existingItem = invoiceItems.find(item => item.productId === productId);
     if (existingItem) {
         existingItem.quantity += quantity;
@@ -118,7 +116,7 @@ function updateInvoiceItemsTable() {
     invoiceItems.forEach((item, index) => {
         const subtotal = item.price * item.quantity;
         total += subtotal;
-        item.subtotal = subtotal; // Simpan subtotal di objek
+        item.subtotal = subtotal;
 
         const row = document.createElement('tr');
         row.innerHTML = `
@@ -168,7 +166,6 @@ document.getElementById('invoiceForm').addEventListener('submit', async (e) => {
         const result = await response.json();
         if (result.status === 'success') {
             showNotification(`Invoice ${result.data.invoiceId} berhasil dibuat!`);
-            // Reset form
             document.getElementById('invoiceForm').reset();
             invoiceItems = [];
             updateInvoiceItemsTable();
@@ -197,7 +194,7 @@ document.getElementById('addProductForm').addEventListener('submit', async (e) =
         if (result.status === 'success') {
             showNotification(`Produk "${result.data.productName}" berhasil ditambahkan.`);
             document.getElementById('addProductForm').reset();
-            loadProducts(); // Muat ulang daftar produk
+            loadProducts();
         } else {
             throw new Error(result.message);
         }
@@ -259,7 +256,6 @@ function viewInvoice(invoice) {
     const displayArea = document.getElementById('invoice-display-area');
     displayArea.innerHTML = generateInvoiceHTML(invoice);
     displayArea.classList.remove('hidden');
-    // Scroll ke invoice
     displayArea.scrollIntoView({ behavior: 'smooth' });
 }
 
@@ -281,7 +277,7 @@ function generateInvoiceHTML(invoice) {
         <div id="invoice-to-print">
             <header class="invoice-header">
                 <h1>Arysvain Bookstore</h1>
-                <p>Jl. Pakis Tirtosari X No. 26, Kota Surabaya, Indonesia</p>
+                <p>Jl. Literasi No. 123, Kota Buku, Indonesia</p>
             </header>
             <section class="invoice-details">
                 <div class="invoice-details-left">
@@ -309,6 +305,14 @@ function generateInvoiceHTML(invoice) {
             <section class="invoice-total">
                 <p class="total-amount">Total: Rp ${formatCurrency(invoice.totalAmount)}</p>
             </section>
+            
+            <!-- BAGIAN BARU: INFORMASI PEMBAYARAN -->
+            <section class="invoice-payment-details">
+                <strong>Pembayaran dapat ditransfer ke:</strong>
+                <p>Bank BRI : 371401011038535</p>
+                <p>a.n Ema Imtihana Rosyida</p>
+            </section>
+
             <footer class="invoice-footer">
                 <p>Terima kasih telah berbelanja di Arysvain Bookstore!</p>
             </footer>
