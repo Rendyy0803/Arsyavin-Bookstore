@@ -277,7 +277,7 @@ function generateInvoiceHTML(invoice) {
         <div id="invoice-to-print">
             <header class="invoice-header">
                 <h1>Arsyavin Bookstore</h1>
-                <p>Jl. Literasi No. 123, Kota Buku, Indonesia</p>
+                <p>Jl. Pakis Tirtosari X No. 26, Kota Surabaya, Indonesia</p>
             </header>
             <section class="invoice-details">
                 <div class="invoice-details-left">
