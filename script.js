@@ -1,5 +1,5 @@
 // ================================================================= //
-// ARYSVAIN BOOKSTORE - INVOICE APP FRONTEND SCRIPT                  //
+// ARSYAVIN BOOKSTORE - INVOICE APP FRONTEND SCRIPT                  //
 // ================================================================= //
 
 // PENTING: Ganti URL ini dengan URL Web App dari Google Apps Script Anda
@@ -276,7 +276,7 @@ function generateInvoiceHTML(invoice) {
     return `
         <div id="invoice-to-print">
             <header class="invoice-header">
-                <h1>Arysvain Bookstore</h1>
+                <h1>Arsyavin Bookstore</h1>
                 <p>Jl. Literasi No. 123, Kota Buku, Indonesia</p>
             </header>
             <section class="invoice-details">
@@ -314,7 +314,7 @@ function generateInvoiceHTML(invoice) {
             </section>
 
             <footer class="invoice-footer">
-                <p>Terima kasih telah berbelanja di Arysvain Bookstore!</p>
+                <p>Terima kasih telah berbelanja di Arsyavin Bookstore!</p>
             </footer>
             <div class="mt-8 text-center no-print">
                 <button onclick="window.print()" class="bg-green-600 text-white px-6 py-2 rounded-md hover:bg-green-700">Cetak Invoice</button>
